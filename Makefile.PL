@@ -17,5 +17,5 @@ WriteMakefile(
     },
     ($] >= 5.005 ?
       (ABSTRACT_FROM   => 'lib/Net/Pface.pm',
-       AUTHOR          => 'Konstantin Titov <xmolex@list.ru>') : ()),
+       AUTHOR          => 'Konstantin Titov <xmolex@cpan.org>') : ()),
 );

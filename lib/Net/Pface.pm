@@ -26,11 +26,11 @@ sub new {
     # check param
     warn "Don't defined 'id'"  unless defined $self->{'id'};
     warn "Don't defined 'key'" unless defined $self->{'key'};
-    $self->{'server'}     = $def{'server'}     unless defined $self->{'server'};
-    $self->{'timeout'}    = $def{'timeout'}    unless defined $self->{'timeout'};
-    $self->{'agent'}      = $def{'agent'}      unless defined $self->{'agent'};
-    $self->{'type'}       = $def{'type'}       unless defined $self->{'type'};
-    $self->{'cache_time'} = $def{'cache_time'} unless defined $self->{'cache_time'};
+    unless ( defined $self->{'server'} )     {$self->{'server'}     = $def{'server'};}
+    unless ( defined $self->{'timeout'} )    {$self->{'timeout'}    = $def{'timeout'}}
+    unless ( defined $self->{'agent'} )      {$self->{'agent'}      = $def{'agent'}}
+    unless ( defined $self->{'type'} )       {$self->{'type'}       = $def{'type'}}
+    unless ( defined $self->{'cache_time'} ) {$self->{'cache_time'} = $def{'cache_time'}}
     
     # init browser
     $self->{'browser'} = LWP::UserAgent->new( agent => $self->{'agent'}, ssl_opts => { verify_hostname => 0 } );
@@ -51,8 +51,8 @@ sub get {
     my $result = {};
     
     # check params
-    $$result{'error'} = "Don't defined user id"     unless defined $user_id;
-    $$result{'error'} = "Don't defined fileds list" unless @fields;
+    unless ( defined $user_id ) {$$result{'error'} = "Don't defined user id";}
+    unless (@fields)             {$$result{'error'} = "Don't defined fileds list"};
     return $result
         if exists $$result{'error'};
     
@@ -93,9 +93,9 @@ sub auth {
     my $result = {};
     
     # check params
-    $$result{'error'} = "Don't defined ip address"  unless defined $ip;
-    $$result{'error'} = "Don't defined second sess" unless defined $s2;
-    $$result{'error'} = "Don't defined first sess"  unless defined $s1;
+    unless ( defined $ip ) {$$result{'error'} = "Don't defined ip address";}
+    unless ( defined $s2 ) {$$result{'error'} = "Don't defined second sess";}
+    unless ( defined $s1 ) {$$result{'error'} = "Don't defined first sess";}
     return $result
         if exists $$result{'error'};
     
@@ -136,15 +136,15 @@ sub _parse {
     my $self = shift;
     
     # check pface answer
-    ${$_[0]}{'error'} = $_[1]->status_line
-        unless $_[1]->is_success;
+    unless ($_[1]->is_success) {${$_[0]}{'error'} = $_[1]->status_line;}
     return
         if exists ${$_[0]}{'error'};
 
     # parse json from server
     my $content = decode( "utf8", $_[1]->decoded_content );
-    ${$_[0]}{'error'} = "don't parse json"
-        unless ( eval { $_[0] = $self->{'json_xs'}->decode($content); } );
+    unless ( eval { $_[0] = $self->{'json_xs'}->decode($content) } ) {
+        ${$_[0]}{'error'} = "don't parse json";
+    }
     
     # save source answer
     ${$_[0]}{'answer'} = $content;
@@ -159,7 +159,9 @@ sub _check_cache {
         if ( $self->{'cache_data'}{$memkey}{'time'} > time() ) {
             # get data from cache
             my $result = $self->{'cache_data'}{$memkey}{'data'};
-            $$result{'is_cache'} = 1 unless $$result{'is_cache'};
+            unless ($$result{'is_cache'}) {
+                $$result{'is_cache'} = 1;
+            }
             return $result;
         }
     }
@@ -248,7 +250,7 @@ pface.ru API: http://d.pface.ru/request_basic.html
 
 =head1 AUTHOR
 
-Konstantin Titov, E<lt>xmolex@list.ruE<gt>
+Konstantin Titov, E<lt>xmolex@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
