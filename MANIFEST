@@ -1,6 +1,6 @@
 Changes
 lib/Net/Pface.pm
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 README
-t/Net-Pface.t
+t/t-net-pface.t
